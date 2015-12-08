@@ -1,13 +1,10 @@
 <?php
-namespace PlusB\PbSocial\Controller;
-
 
 /***************************************************************
- *
  *  Copyright notice
  *
  *  (c) 2014 Mikolaj Jedrzejewski <mj@plusb.de>, plusB
- *
+ *  
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,85 +23,52 @@ namespace PlusB\PbSocial\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
- * ItemController
+ *
+ *
+ * @package pb_besocial
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ *
  */
-class ItemController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class Tx_PbBesocial_Controller_ItemController extends Tx_Extbase_MVC_Controller_ActionController {
 
-    const TYPE_FACEBOOK = "facebook";
-    const TYPE_GOOGLE = "googleplus";
-    const TYPE_IMGUR = "imgur";
-    const TYPE_INSTAGRAM = "instagram";
-    const TYPE_PINTEREST = "pinterest";
-    const TYPE_TWITTER = "twitter";
-    const TYPE_TUMBLR = "tumblr";
-    const TYPE_YOUTUBE = "youtube";
-    const TYPE_DUMMY = "dummy";
+	/**
+	 * itemRepository
+	 *
+	 * @var Tx_PbBesocial_Domain_Repository_ItemRepository
+	 */
+	protected $itemRepository;
 
-    /**
-     * itemRepository
-     *
-     * @var \PlusB\PbSocial\Domain\Repository\ItemRepository
-     * @inject
-     */
-    protected $itemRepository = NULL;
+	/**
+	 * injectItemRepository
+	 *
+	 * @param Tx_PbBesocial_Domain_Repository_ItemRepository $itemRepository
+	 * @return void
+	 */
+	public function injectItemRepository(Tx_PbBesocial_Domain_Repository_ItemRepository $itemRepository) {
+		$this->itemRepository = $itemRepository;
+	}
 
-    /**
-     * action list
-     *
-     * @return void
-     */
-    public function listAction() {
-        $items = $this->itemRepository->findAll();
-        $this->view->assign('items', $items);
-    }
+	/**
+	 * action list
+	 *
+	 * @return void
+	 */
+	public function listAction() {
+		$items = $this->itemRepository->findAll();
+		$this->view->assign('items', $items);
+	}
 
-    /**
-     * action show
-     *
-     * @param \PlusB\PbSocial\Domain\Model\Item $item
-     * @return void
-     */
-    public function showAction(\PlusB\PbSocial\Domain\Model\Item $item) {
-        $this->view->assign('item', $item);
-    }
-
-    /**
-     * action edit
-     *
-     * @param \PlusB\PbSocial\Domain\Model\Item $item
-     * @ignorevalidation $item
-     * @return void
-     */
-    public function editAction(\PlusB\PbSocial\Domain\Model\Item $item) {
-        $this->view->assign('item', $item);
-    }
-
-    /**
-     * action update
-     *
-     * @param \PlusB\PbSocial\Domain\Model\Item $item
-     * @return void
-     */
-    public function updateAction(\PlusB\PbSocial\Domain\Model\Item $item) {
-        $this->addFlashMessage('The object was updated. Please be aware that this action is publicly accessible unless you implement an access check. See <a href="http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain" target="_blank">Wiki</a>', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-        $this->itemRepository->update($item);
-        $this->redirect('list');
-    }
-
-    /**
-     * action delete
-     *
-     * @param \PlusB\PbSocial\Domain\Model\Item $item
-     * @return void
-     */
-    public function deleteAction(\PlusB\PbSocial\Domain\Model\Item $item) {
-        $this->addFlashMessage('The object was deleted. Please be aware that this action is publicly accessible unless you implement an access check. See <a href="http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain" target="_blank">Wiki</a>', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-        $this->itemRepository->remove($item);
-        $this->redirect('list');
-    }
+	/**
+	 * action show
+	 *
+	 * @param Tx_PbBesocial_Domain_Model_Item $item
+	 * @return void
+	 */
+	public function showAction(Tx_PbBesocial_Domain_Model_Item $item) {
+		$this->view->assign('item', $item);
+	}
 
     /**
      * action showSocialBarAction
@@ -116,286 +80,144 @@ class ItemController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController 
     }
 
     /**
-     * action showSocialFeedAction
+     * action showSocialListAction
      * @return void
      */
     public function showSocialFeedAction() {
-        $feeds = array();
+        $feeds = null;
         $feeds_facebook = null;
         $feeds_googleplus = null;
-        $feeds_imgur = null;
         $feeds_instagram = null;
         $feeds_twitter = null;
-        $feeds_tumblr = null;
-        $feeds_dummy = null;
-        $onlyWithPicture = $this->settings["onlyWithPicture"] === '1' ? true : false;
-        $textTrimLength = intval($this->settings["textTrimLength"]) > 0 ? intval($this->settings["textTrimLength"]) : 130;
-        $feedRequestLimit = intval(empty($this->settings['feedRequestLimit']) ? 10 : $this->settings['feedRequestLimit']);
+        $AccId = "226066384147152";
 
-        if ($this->settings["facebookEnabled"] === '1') {
-            $fb_feeds = $this->itemRepository->findFeedsByType(self::TYPE_FACEBOOK, $this->settings);
+        if($this->settings["sf_facebook"] != 0){
+            $feeds_facebook = $this->itemRepository->findFeedsByType("facebook");
+//            $this->itemRepository->writeLog(
+//                'NOTICE',
+//                'Facebook ausführen',
+//                array($feeds_facebook)
+//            );
+            if($feeds_facebook !== NULL){
 
-            if ($fb_feeds !== NULL) {
-                foreach ($fb_feeds as $fb_feed) {
-                    $this->view->assign(self::TYPE_FACEBOOK . '_' . $fb_feed->getCacheIdentifier() . '_raw', $fb_feed->getResult());
-                    foreach ($fb_feed->getResult()->data as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->picture)) {
-                            continue;
-                        }
+                $this->view->assign('feeds_facebook', $feeds_facebook);
+                foreach($feeds_facebook->getResult()->data as $rawFeed){
+                    if($rawFeed->picture == "" || $rawFeed->message == ""){ continue; }
+                    if($rawFeed->from->id != $AccId){ continue; }
 
-                        $feed = new Feed($fb_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->id);
-                        $feed->setText(trim_text($rawFeed->message, $textTrimLength, true));
-                        $feed->setImage(urldecode($rawFeed->picture));
-                        $feed->setLink($rawFeed->link);
-                        $d = new \DateTime($rawFeed->created_time);
-                        $feed->setTimeStampTicks($d->getTimestamp());
+//                    if($rawFeed->id == "226066384147152_697680396985746"){
+//                        echo "<pre>".print_r($rawFeed,true)."</pre>";
+//                    }
 
-                        $feeds[] = $feed;
-                    }
+                    $feed = new Feed();
+                    $feed->setId($rawFeed->id);
+                    $feed->setProvider($feeds_facebook->getType());
+                    $feed->setRaw($rawFeed);
+                    $feed->setText(trim_text($rawFeed->message,85,true));
+                    $feed->setImage($rawFeed->picture);
+                    $feed->setLink($rawFeed->link);
+                    $d = new DateTime($rawFeed->created_time);
+                    $feed->setTimeStampTicks($d->getTimestamp());
+                    $feeds[] = $feed;
                 }
             }
         }
 
-        if ($this->settings["googleEnabled"] === '1') {
-            $feeds_googleplus = $this->itemRepository->findFeedsByType(self::TYPE_GOOGLE, $this->settings);
+        if($this->settings["sf_googleplus"] != 0){
+            $feeds_googleplus = $this->itemRepository->findFeedsByType("googleplus");
 
-            if ($feeds_googleplus !== NULL) {
-                foreach ($feeds_googleplus as $gp_feed) {
-                    $this->view->assign(self::TYPE_GOOGLE . '_' . $gp_feed->getCacheIdentifier() . '_raw', $gp_feed->getResult());
-                    foreach ($gp_feed->getResult()->items as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->object->attachments[0]->image->url)) {
-                            continue;
-                        }
-                        $feed = new Feed($gp_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->id);
-                        $feed->setText(trim_text($rawFeed->title, $textTrimLength, true));
-                        $feed->setImage($rawFeed->object->attachments[0]->image->url);
+            if($feeds_googleplus !== NULL){
 
-                        // only for type photo
-                        if ($rawFeed->object->attachments[0]->objectType == "photo" && $rawFeed->object->attachments[0]->fullImage->url != "") {
-                            $feed->setImage($rawFeed->object->attachments[0]->fullImage->url);
-                        }
+                $this->view->assign('feeds_googleplus', $feeds_googleplus);
+                foreach($feeds_googleplus->getResult()->items as $rawFeed){
+                    if($rawFeed->object->attachments[0]->image->url == ""){ continue; }
+                    $feed = new Feed();
+                    $feed->setId($rawFeed->id);
+                    $feed->setProvider($feeds_googleplus->getType());
+                    $feed->setRaw($rawFeed);
+                    $feed->setText(trim_text($rawFeed->title,105,true));
+                    $feed->setImage($rawFeed->object->attachments[0]->image->url);
 
-                        // only if no title is set but somehow the video is labeled
-                        if ($rawFeed->title == "" && $rawFeed->object->attachments[0]->displayName != "") {
-                            $feed->setText(trim_text($rawFeed->object->attachments[0]->displayName, $textTrimLength, true));
-                        }
-
-                        $feed->setLink($rawFeed->url);
-                        $d = new \DateTime($rawFeed->updated);
-                        $feed->setTimeStampTicks($d->getTimestamp());
-                        $feeds[] = $feed;
+                    // only for type photo
+                    if($rawFeed->object->attachments[0]->objectType == "photo" && $rawFeed->object->attachments[0]->fullImage->url != ""){
+                        $feed->setImage($rawFeed->object->attachments[0]->fullImage->url);
                     }
+
+                    // only if no title is set but somehow the video is labeled
+                    if($rawFeed->title == "" && $rawFeed->object->attachments[0]->displayName != ""){
+                        $feed->setText(trim_text($rawFeed->object->attachments[0]->displayName,105,true));
+                    }
+
+                    $feed->setLink($rawFeed->url);
+                    $d = new DateTime($rawFeed->updated);
+                    $feed->setTimeStampTicks($d->getTimestamp());
+                    $feeds[] = $feed;
                 }
             }
         }
 
-        if ($this->settings["imgurEnabled"] === '1') {
-            $feeds_imgur = $this->itemRepository->findFeedsByType(self::TYPE_IMGUR, $this->settings);
-            $endingArray = array('.gif', '.jpg', '.png');
-//            DebuggerUtility::var_dump($feeds_imgur);
-            if ($feeds_imgur !== NULL) {
-                foreach ($feeds_imgur as $im_feed) {
-                    $this->view->assign(self::TYPE_IMGUR . '_' . $im_feed->getCacheIdentifier() . '_raw', $im_feed->getResult());
-                    foreach ($im_feed->getResult()->data as $rawFeed) {
-                        if (is_object($rawFeed)) {
-                            if ($this->check_end($rawFeed->link, $endingArray)) {
-                                $feed = new Feed($im_feed->getType(), $rawFeed);
-                                $feed->setId($rawFeed->id);
-                                $feed->setImage($rawFeed->link);
-                                $feed->setLink('http://imgur.com/gallery/' . $rawFeed->id);
-                                $feed->setTimeStampTicks($rawFeed->created_time);
-                                $feeds[] = $feed;
-                            }
-                        }
-                    }
+        if($this->settings["sf_instagram"] != 0){
+            $feeds_instagram = $this->itemRepository->findFeedsByType("instagram");
+
+            if($feeds_instagram !== NULL){
+
+                //$this->view->assign('feeds_instagram', $feeds_instagram);
+                foreach($feeds_instagram->getResult()->data as $rawFeed){
+                    if($rawFeed->images->standard_resolution->url == "" || $rawFeed->caption == ""){ continue; }
+                    $feed = new Feed();
+                    $feed->setId($rawFeed->id);
+                    $feed->setProvider($feeds_instagram->getType());
+                    $feed->setRaw($rawFeed);
+                    $feed->setText(trim_text($rawFeed->caption,85,true));
+                    $feed->setImage($rawFeed->images->standard_resolution->url);
+                    $feed->setLink($rawFeed->link);
+                    $feed->setTimeStampTicks($rawFeed->created_time);
+                    $feeds[] = $feed;
                 }
             }
+
         }
 
-        if ($this->settings["instagramEnabled"] === '1') {
-            $feeds_instagram = $this->itemRepository->findFeedsByType(self::TYPE_INSTAGRAM, $this->settings);
+        if($this->settings["sf_twitter"] != 0){
+            $feeds_twitter = $this->itemRepository->findFeedsByType("twitter");
+//            $this->view->assign('feeds_twitter', $feeds_twitter);
 
-            if ($feeds_instagram !== NULL) {
-                foreach ($feeds_instagram as $ig_feed) {
-                    $this->view->assign(self::TYPE_INSTAGRAM . '_' . $ig_feed->getCacheIdentifier() . '_raw', $ig_feed->getResult());
-                    foreach ($ig_feed->getResult()->data as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->images->standard_resolution->url)) {
-                            continue;
-                        }
-                        $feed = new Feed($ig_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->id);
-                        $feed->setText(trim_text($rawFeed->caption->text, $textTrimLength, true));
-                        $feed->setImage($rawFeed->images->standard_resolution->url);
-                        $feed->setLink($rawFeed->link);
-                        $feed->setTimeStampTicks($rawFeed->created_time);
-                        $feeds[] = $feed;
-                    }
-                }
-            }
+//            echo "<pre>".print_r($feeds_twitter->getResult(),true)."</pre>";
+
+
+//            foreach($feeds_twitter->getResult()->data as $rawFeed){
+//                if($rawFeed->images->standard_resolution->url == "" || $rawFeed->caption == ""){ continue; }
+//                $feed = new Feed();
+//                $feed->setId($rawFeed->id);
+//                $feed->setProvider($feeds_twitter->getType());
+//                $feed->setText(trim_text($rawFeed->caption,85,true));
+//                $feed->setImage($rawFeed->images->standard_resolution->url);
+//                $feed->setLink($rawFeed->link);
+//                $feed->setRaw($rawFeed);
+//                $feed->setTimeStampTicks($rawFeed->created_time);
+//                $feeds[] = $feed;
+//            }
         }
 
-        if ($this->settings["pinterestEnabled"] === '1') {
-            $feeds_pinterest = $this->itemRepository->findFeedsByType(self::TYPE_PINTEREST, $this->settings);
-            if ($feeds_pinterest !== NULL) {
-                foreach ($feeds_pinterest as $pin_feed) {
-                    $this->view->assign(self::TYPE_PINTEREST . '_' . $pin_feed->getCacheIdentifier() . '_raw', $pin_feed->getResult());
-                    foreach ($pin_feed->getResult()->data as $rawFeed) {
-                        $i = 0;
-                        foreach ($rawFeed as $pin) {
-                            if ($pin->images && ($i < $feedRequestLimit)) {
-                                $i++;
-                                $feed = new Feed($pin_feed->getType(), $pin);
-                                $feed->setText(trim_text($pin->description, $textTrimLength, true));
-                                $image = (array)$pin->images;
-                                $feed->setImage($image['237x']->url);
-                                $feed->setLink($pin->link);
-                                $feed->setTimeStampTicks($rawFeed->created_time);
-                                $feeds[] = $feed;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($this->settings["tumblrEnabled"] === '1') {
-            $feeds_tumblr = $this->itemRepository->findFeedsByType(self::TYPE_TUMBLR, $this->settings);
-
-            if ($feeds_tumblr !== NULL) {
-                foreach ($feeds_tumblr as $tblr_feed) {
-                    $this->view->assign(self::TYPE_TUMBLR . '_' . $tblr_feed->getCacheIdentifier() . '_raw', $tblr_feed->getResult());
-                    foreach ($tblr_feed->getResult()->posts as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->photos[0]->original_size->url)) {
-                            continue;
-                        }
-                        $feed = new Feed($tblr_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->id);
-                        if ($rawFeed->caption) {
-                            $feed->setText(trim_text(strip_tags($rawFeed->caption), $textTrimLength, true));
-                        } else if ($rawFeed->body) {
-                            $feed->setText(trim_text(strip_tags($rawFeed->body), $textTrimLength, true));
-                        }
-                        if ($rawFeed->photos[0]->original_size->url) {
-                            $feed->setImage($rawFeed->photos[0]->original_size->url);
-                        } else if ($rawFeed->thumbnail_url) {
-                            $feed->setImage($rawFeed->thumbnail_url);
-                        }
-
-                        $feed->setLink($rawFeed->post_url);
-                        $feed->setTimeStampTicks($rawFeed->timestamp);
-                        $feeds[] = $feed;
-                    }
-                }
-            }
-        }
-
-        if ($this->settings["twitterEnabled"] === '1') {
-            $feeds_twitter = $this->itemRepository->findFeedsByType(self::TYPE_TWITTER, $this->settings);
-            if ($feeds_twitter !== NULL) {
-                foreach ($feeds_twitter as $twt_feed) {
-                    if (empty($twt_feed->getResult()->statuses)) {
-                        break;
-                    }
-                    $this->view->assign(self::TYPE_TWITTER . '_' . $twt_feed->getCacheIdentifier() . '_raw', $twt_feed->getResult());
-                    foreach ($twt_feed->getResult()->statuses as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->entities->media)) {
-                            continue;
-                        }
-                        $feed = new Feed($twt_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->id);
-                        $feed->setText(trim_text($rawFeed->text, $textTrimLength, true));
-                        if ($rawFeed->entities->media[0]->type == 'photo') {
-                            $feed->setImage($rawFeed->entities->media[0]->media_url);
-                        }
-                        if ($rawFeed->entities->media[0]->url) {
-                            $feed->setLink($rawFeed->entities->media[0]->url);
-                        } else if ($rawFeed->entities->urls[0]->expanded_url) {
-                            $feed->setLink($rawFeed->entities->urls[0]->expanded_url);
-                        } else {
-                            $feed->setLink('https://twitter.com/' . $rawFeed->user->screen_name . '/status/' . $rawFeed->id_str);
-                        }
-                        $dateTime = new \DateTime($rawFeed->created_at);
-                        $feed->setTimeStampTicks($dateTime->getTimestamp());
-                        $feeds[] = $feed;
-                    }
-                }
-            }
-        }
-
-        if ($this->settings["youtubeEnabled"] === '1') {
-            $feeds_youtube = $this->itemRepository->findFeedsByType(self::TYPE_YOUTUBE, $this->settings);
-//            DebuggerUtility::var_dump($feeds_youtube,'feeds youtube');
-//            json_decode ($feeds_youtube['result']);
-//            DebuggerUtility::var_dump(json_decode ($feeds_youtube->result),'feeds youtube');
-            if ($feeds_youtube !== NULL) {
-                foreach ($feeds_youtube as $yt_feed) {
-//                    DebuggerUtility::var_dump($yt_feed);
-                    $this->view->assign(self::TYPE_YOUTUBE . '_' . $yt_feed->getCacheIdentifier() . '_raw', $yt_feed->getResult());
-                    foreach ($yt_feed->getResult()->data as $rawFeed) {
-//                        DebuggerUtility::var_dump($rawFeed);
-                        if (is_object($rawFeed)) {
-                            $feed = new Feed($yt_feed->getType(), $rawFeed);
-                            $feed->setId($rawFeed->id);
-                            $feed->setImage($rawFeed->link);
-                            $feed->setLink('http://imgur.com/gallery/' . $rawFeed->id);
-                            $feed->setTimeStampTicks($rawFeed->created_time);
-                            $feeds[] = $feed;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($this->settings["dummyEnabled"] === '1') {
-            $feeds_dummy = $this->itemRepository->findFeedsByType(self::TYPE_DUMMY, $this->settings);
-
-            if ($feeds_dummy !== NULL) {
-                foreach ($feeds_dummy as $dmy_feed) {
-                    $this->view->assign(self::TYPE_DUMMY . '_' . $dmy_feed->getCacheIdentifier() . '_raw', $dmy_feed->getResult());
-                    foreach ($dmy_feed->getResult()->PROVIDER_AWESOME_JSON_STRUCTURE as $rawFeed) {
-                        if ($onlyWithPicture && empty($rawFeed->TODO_PROVIDER_JSON_PICTURE_NODE)) {
-                            continue;
-                        }
-                        $feed = new Feed($dmy_feed->getType(), $rawFeed);
-                        $feed->setId($rawFeed->TODO_PROVIDER_JSON_PICTURE_NODE);
-                        $feed->setText(trim_text($rawFeed->TODO_PROVIDER_JSON_TEXT_NODE, $textTrimLength, true));
-                        $feed->setImage($rawFeed->TODO_PROVIDER_JSON_PICTURE_NODE);
-                        $feed->setLink($rawFeed->TODO_PROVIDER_JSON_LINK_NODE);
-                        $feed->setTimeStampTicks($rawFeed->TODO_PROVIDER_JSON_MODIFY_DATE_NODE);
-                        $feeds[] = $feed;
-                    }
-                }
-            }
-        }
-
-        // sort array if not empty
-        if (!empty($feeds)) {
-            usort($feeds, array($this, "cmp"));
-        }
-
+        usort($feeds,array($this,"cmp"));    // sort array
         $this->view->assign('feeds', $feeds);
     }
 
-    public function cmp($a, $b) {
-        if ($a == $b) {
-            return 0;
-        }
+    /**
+     * @param $url
+     */
+    public function showContentForUrlAction($url) {
+        $this->view->assign('content', $this->itemRepository->findContentByUrl($url));
+    }
+
+    public function cmp($a, $b)
+    {
+        if ($a == $b) { return 0; }
         return ($a->getTimeStampTicks() > $b->getTimeStampTicks()) ? -1 : 1;
     }
-
-    function check_end($str, $ends) {
-        foreach ($ends as $try) {
-            if (substr($str, -1 * strlen($try)) === $try) return $try;
-        }
-        return false;
-    }
-
 }
 
-
-class Feed {
+class Feed{
     /**
      * @var string
      */
@@ -431,45 +253,39 @@ class Feed {
      */
     protected $Raw;
 
-    /**
-     * @param string $provider
-     * @param string $rawFeed
-     */
-    function __construct($provider, $rawFeed) {
-        $this->setProvider($provider);
-        $this->setRaw($rawFeed);
-    }
+
+
 
     /**
      * @param string $id
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
     /**
      * @return string
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * @param string $Image
      */
-    public function setImage($Image) {
-        if ($this->Provider == ItemController::TYPE_FACEBOOK) {
-            if ($this->Raw->type == "photo") {
-                if (strpos($Image, "//scontent") !== false) {
-                    //$Image = preg_replace('/\/v\/\S*\/p[0-9]*x[0-9]*\//', '/', $Image);
-                }
-                if (strpos($Image, "//fbcdn") !== false) {
-                    //$Image = str_replace("/v/","/",$Image);
-                    //$Image = str_replace("/p130x130/","/p/",$Image);
-                }
-            }
-            if ($this->Raw->type == "link") {
+    public function setImage($Image)
+    {
+        if($this->Provider == "facebook"){
+            $Image = str_replace("/v/","/",$Image);
+            $Image = str_replace("/p130x130/","/p/",$Image);
+
+            if($this->Raw->type == "link"){
                 $Image = preg_replace('/&[wh]=[0-9]*/', '', $Image); // for embedded links
+            }
+            if($this->Raw->type == "video"){
+
             }
         }
         $this->Image = $Image;
@@ -478,77 +294,88 @@ class Feed {
     /**
      * @return string
      */
-    public function getImage() {
+    public function getImage()
+    {
         return $this->Image;
     }
 
     /**
      * @param string $Provider
      */
-    public function setProvider($Provider) {
+    public function setProvider($Provider)
+    {
         $this->Provider = $Provider;
     }
 
     /**
      * @return string
      */
-    public function getProvider() {
+    public function getProvider()
+    {
         return $this->Provider;
     }
 
     /**
      * @param string $Raw
      */
-    public function setRaw($Raw) {
+    public function setRaw($Raw)
+    {
         $this->Raw = $Raw;
     }
 
     /**
      * @return string
      */
-    public function getRaw() {
+    public function getRaw()
+    {
         return $this->Raw;
     }
 
     /**
      * @param string $Text
      */
-    public function setText($Text) {
+    public function setText($Text)
+    {
         $this->Text = $Text;
     }
 
     /**
      * @return string
      */
-    public function getText() {
+    public function getText()
+    {
         return $this->Text;
     }
 
     /**
      * @param int $TimeStampTicks
      */
-    public function setTimeStampTicks($TimeStampTicks) {
+    public function setTimeStampTicks($TimeStampTicks)
+    {
         $this->TimeStampTicks = $TimeStampTicks;
     }
 
     /**
      * @return int
      */
-    public function getTimeStampTicks() {
+    public function getTimeStampTicks()
+    {
         return $this->TimeStampTicks;
     }
 
     /**
      * @param string $Link
      */
-    public function setLink($Link) {
+    public function setLink($Link)
+    {
         $this->Link = $Link;
     }
 
     /**
      * @return string
      */
-    public function getLink() {
+    public function getLink()
+    {
         return $this->Link;
     }
 }
@@ -562,10 +389,6 @@ class Feed {
  * @return string
  */
 function trim_text($input, $length, $ellipses = true, $strip_html = true) {
-    if (empty($input)) {
-        return "";
-    }
-
     //strip tags, if desired
     if ($strip_html) {
         $input = strip_tags($input);
@@ -587,3 +410,4 @@ function trim_text($input, $length, $ellipses = true, $strip_html = true) {
 
     return $trimmed_text;
 }
+?>

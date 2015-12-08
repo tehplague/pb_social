@@ -1,13 +1,10 @@
 <?php
-namespace PlusB\PbSocial\Domain\Model;
-
 
 /***************************************************************
- *
  *  Copyright notice
  *
  *  (c) 2014 Mikolaj Jedrzejewski <mj@plusb.de>, plusB
- *
+ *  
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -28,91 +25,65 @@ namespace PlusB\PbSocial\Domain\Model;
  ***************************************************************/
 
 /**
- * Item
+ *
+ *
+ * @package pb_besocial
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ *
  */
-class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Tx_PbBesocial_Domain_Model_Item extends Tx_Extbase_DomainObject_AbstractEntity {
 
     /**
-     * @param string $type
+     * type
+     *
+     * @var string
      */
-    function __construct($type = "") {
-        if($this->getType() == "" && $type != "" && $type != null){
-            $this->setType($type);
-        }
-
-        $this->setDate(new \DateTime('now'));
-    }
+    protected $type;
 
 	/**
-	 * type
+	 * url
 	 *
 	 * @var string
 	 */
-	protected $type = '';
-
-	/**
-	 * cacheIdentifier
-	 *
-	 * @var string
-	 */
-	protected $cacheIdentifier = '';
+	protected $url;
 
 	/**
 	 * date
 	 *
-	 * @var \DateTime
+	 * @var integer
 	 */
-	protected $date = NULL;
+	protected $date;
 
 	/**
 	 * result
 	 *
 	 * @var string
 	 */
-	protected $result = '';
+	protected $result;
 
 	/**
-	 * Returns the type
+	 * Returns the url
 	 *
-	 * @return string $type
+	 * @return string $url
 	 */
-	public function getType() {
-		return $this->type;
+	public function getUrl() {
+		return $this->url;
 	}
 
 	/**
-	 * Sets the type
+	 * Sets the url
 	 *
-	 * @param string $type
+	 * @param string $url
 	 * @return void
 	 */
-	public function setType($type) {
-		$this->type = $type;
-	}
-
-	/**
-	 * Returns the cacheIdentifier
-	 *
-	 * @return string $cacheIdentifier
-	 */
-	public function getCacheIdentifier() {
-		return $this->cacheIdentifier;
-	}
-
-	/**
-	 * Sets the cacheIdentifier
-	 *
-	 * @param string $cacheIdentifier
-	 * @return void
-	 */
-	public function setCacheIdentifier($cacheIdentifier) {
-		$this->cacheIdentifier = $cacheIdentifier;
+	public function setUrl($url) {
+		$this->url = $url;
 	}
 
 	/**
 	 * Returns the date
 	 *
-	 * @return \DateTime $date
+	 * @return integer $date
 	 */
 	public function getDate() {
 		return $this->date;
@@ -121,20 +92,20 @@ class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
 	 * Sets the date
 	 *
-	 * @param \DateTime $date
+	 * @param integer $date
 	 * @return void
 	 */
-	public function setDate(\DateTime $date) {
+	public function setDate($date) {
 		$this->date = $date;
 	}
 
 	/**
-	 * Returns the result
+	 * Returns the result json_decoded
 	 *
 	 * @return string $result
 	 */
 	public function getResult() {
-        return json_decode($this->result);
+		return json_decode($this->result);
 	}
 
 	/**
@@ -147,4 +118,24 @@ class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->result = $result;
 	}
 
+    /**
+     * Returns the type
+     *
+     * @return string $type
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     * Sets the type
+     *
+     * @param string $type
+     * @return void
+     */
+    public function setType($type) {
+        $this->type = $type;
+    }
+
 }
+?>

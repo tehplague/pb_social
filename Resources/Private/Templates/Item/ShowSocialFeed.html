@@ -1,131 +1,87 @@
-<f:layout name="Default"/>
+<f:layout name="Default" />
+
 <f:section name="main">
-    <div class="pb-list">
-        <f:for each="{feeds}" as="feed">
-
-            <f:if condition="{0:feed.provider}=={0:'googleplus'}">
-                <div class="pb-list-item pb-list-item-googleplus pb-hidden" data-type="{feed.raw.object.attachments.0.objectType}" data-url="{feed.link}">
-                    <f:if condition="{feed.image}">
-                        <f:then>
-                            <div class="image" style="background-image: url({feed.image})"></div>
-                        </f:then>
-                        <f:else>
-                            <div class="image" style="background-image: url(/typo3conf/ext/pb_social/Resources/Public/Icons/google+_big.png);background-repeat:no-repeat;background-size: 128px;background-color:white;"></div>
-                        </f:else>
-                    </f:if>
-                    <f:if condition="{feed.text}">
-                        <span class="text">{feed.text}</span>
-                    </f:if>
-                    <div class="icon"></div>
-                    <a class="additional-info info-1" href="{feed.link}">{feed.raw.object.replies.totalItems}</a>
-                    <a class="additional-info info-2" href="{feed.link}">{feed.raw.object.plusoners.totalItems}</a>
-                    <f:if condition="{0:feed.raw.object.attachments.0.objectType}=={0:'video'}">
-                        <img class="video-overlay" src="/typo3conf/ext/pb_social/Resources/Public/Icons/play_icon.png"/>
-                    </f:if>
-                </div>
-            </f:if>
-
-            <f:if condition="{0:feed.provider}=={0:'imgur'}">
-                <div class="pb-list-item pb-list-item-imgur pb-hidden" data-type="" data-url="{feed.link}">
-                    <div class="image" style="background-image: url({feed.image})"></div>
-                    <f:comment>
-                        <div class="icon"></div>
-                    <a class="additional-info info-1" href="{feed.link}">{feed.raw.likes.count}</a></f:comment>
-                    <a class="additional-info info-2" href="{feed.link}">{feed.Raw.comment_count}</a>
-                </div>
-            </f:if>
-
-            <f:if condition="{0:feed.provider}=={0:'instagram'}">
-                <div class="pb-list-item pb-list-item-instagram pb-hidden" data-type="" data-url="{feed.link}">
-                    <div class="image" style="background-image: url({feed.image})"></div>
-                    <div class="icon"></div>
-                    <a class="additional-info info-1" href="{feed.link}">{feed.raw.likes.count}</a>
-                    <a class="additional-info info-2" href="{feed.link}">{feed.raw.comments.count}</a>
-                </div>
-            </f:if>
-
-            <f:if condition="{0:feed.provider}=={0:'facebook'}">
-                <f:if condition="{0:feed.raw.type}!={0:'status'}">
-                    <div class="pb-list-item pb-list-item-facebook pb-hidden" data-type="{feed.raw.type}" data-id="{feed.id}" data-url="{feed.link}">
-                        <f:if condition="{feed.raw.object_id}">
-                            <f:then>
-                                <div class="image" data-image-id="{feed.raw.object_id}" style="background-image: url(https://graph.facebook.com/{feed.raw.object_id}/picture)"></div>
-                            </f:then>
-                            <f:else>
-                                <div class="image" data-image-id="{feed.raw.object_id}" style="background-image: url({feed.raw.picture})"></div>
-                            </f:else>
+    <div class="social-list">
+        <div class="col-left">
+            <f:for each="{feeds}" as="feed" iteration="counter">
+                <f:cycle values="{0: 'odd', 1: 'even'}" as="cycle">
+                    <f:if condition="{0:cycle}=={0:'odd'}">
+                        <f:if condition="{0:feed.provider}=={0:'facebook'}">
+                            <div class="social-list-item social-list-item-facebook {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="{feed.raw.type}" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/facebook.png" />
+                                <span class="text">{feed.text}</span>
+                                <a class="likes " href="{feed.link}" ><f:count>{feed.raw.likes.data}</f:count></a>
+                                <a class="comments" href="{feed.link}" ><f:count>{feed.raw.comments.data}</f:count></a>
+                                <f:if condition="{0:feed.raw.type}=={0:'video'}">
+                                    <img class="video-overlay" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/swmb_play_icon.png" />
+                                </f:if>
+                            </div>
                         </f:if>
-                        <f:if condition="{feed.text}">
-                            <span class="text">{feed.text}</span>
+                        <f:if condition="{0:feed.provider}=={0:'googleplus'}">
+                            <div class="social-list-item social-list-item-googleplus {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="{feed.raw.object.attachments.0.objectType}" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/g_plus.png" />
+                                <span class="text">{feed.text}</span>
+                                <a class="plus" href="{feed.link}" >{feed.raw.object.replies.totalItems}</a>
+                                <a class="replies" href="{feed.link}" >{feed.raw.object.plusoners.totalItems}</a>
+                                <f:if condition="{0:feed.raw.object.attachments.0.objectType}=={0:'video'}">
+                                    <img class="video-overlay" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/swmb_play_icon.png" />
+                                </f:if>
+                            </div>
                         </f:if>
-                        <div class="icon"></div>
-                        <a class="additional-info info-1" href="{feed.link}">
-                            <f:count>{feed.raw.likes.data}</f:count>
-                        </a>
-                        <a class="additional-info info-2" href="{feed.link}">
-                            <f:count>{feed.raw.comments.data}</f:count>
-                        </a>
-                        <f:if condition="{0:feed.raw.type}=={0:'video'}">
-                            <img class="video-overlay" src="/typo3conf/ext/pb_social/Resources/Public/Icons/play_icon.png"/>
+                        <f:if condition="{0:feed.provider}=={0:'instagram'}">
+                            <div class="social-list-item social-list-item-instagram {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/icon-instagram.PNG" />
+                                <a class="likes" href="{feed.link}" >{feed.raw.likes.count}</a>
+                                <a class="comments" href="{feed.link}" >{feed.raw.comments.count}</a>
+                            </div>
                         </f:if>
-                    </div>
-                </f:if>
-            </f:if>
+                    </f:if>
+                </f:cycle>
+            </f:for>
+        </div>
+        <div class="col-right">
+            <f:for each="{feeds}" as="feed" iteration="counter">
+                <f:cycle values="{0: 'odd', 1: 'even'}" as="cycle">
+                    <f:if condition="{0:cycle}=={0:'even'}">
+                        <f:if condition="{0:feed.provider}=={0:'facebook'}">
+                            <div class="social-list-item social-list-item-facebook {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="{feed.raw.type}" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/facebook.png" />
+                                <span class="text">{feed.text}</span>
+                                <a class="likes" href="{feed.link}" ><f:count>{feed.raw.likes.data}</f:count></a>
+                                <a class="comments" href="{feed.link}" ><f:count>{feed.raw.comments.data}</f:count></a>
+                                <f:if condition="{0:feed.raw.type}=={0:'video'}">
+                                    <img class="video-overlay" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/swmb_play_icon.png" />
+                                </f:if>
+                            </div>
+                        </f:if>
+                        <f:if condition="{0:feed.provider}=={0:'googleplus'}">
+                            <div class="social-list-item social-list-item-googleplus {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="{feed.raw.object.attachments.0.objectType}" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/g_plus.png" />
+                                <span class="text">{feed.text}</span>
+                                <a class="plus" href="{feed.link}" >{feed.raw.object.replies.totalItems}</a>
+                                <a class="replies" href="{feed.link}" >{feed.raw.object.plusoners.totalItems}</a>
+                                <f:if condition="{0:feed.raw.object.attachments.0.objectType}=={0:'video'}">
+                                    <img class="video-overlay" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/swmb_play_icon.png" />
+                                </f:if>
+                            </div>
+                        </f:if>
+                        <f:if condition="{0:feed.provider}=={0:'instagram'}">
+                            <div class="social-list-item social-list-item-instagram {f:if(condition:'{counter.cycle} > 6',then:'hidden')}" data-type="" data-id="{feed.id}" data-url="{feed.link}" data-date="{feed.timestampticks}">
+                                <div class="image" style="background-image: url({feed.image})"></div>
+                                <img class="icon" src="/typo3conf/ext/pb_besocial/Resources/Public/Icons/icon-instagram.PNG" />
+                                <a class="likes" href="{feed.link}" >{feed.raw.likes.count}</a>
+                                <a class="comments" href="{feed.link}" >{feed.raw.comments.count}</a>
+                            </div>
+                        </f:if>
+                    </f:if>
+                </f:cycle>
+            </f:for>
+        </div>
 
-            <f:if condition="{0:feed.provider}=={0:'pinterest'}">
-                <f:debug>{feed}</f:debug>
-                <div class="pb-list-item pb-list-item-pinterest pb-hidden" data-type="" data-url="{feed.link}">
-                    <div class="image" style="background-image: url({feed.image})"></div>
-                    <div class="icon"></div>
-                    <f:if condition="{feed.text}">
-                        <span class="text">{feed.text}</span>
-                    </f:if>
-                    <a class="additional-info info-1" href="{feed.link}">{feed.raw.repin_count}</a>
-                    <a class="additional-info info-2" href="{feed.link}">{feed.raw.like_count}</a>
-                </div>
-            </f:if>
-
-            <f:if condition="{0:feed.provider}=={0:'tumblr'}">
-                <div class="pb-list-item pb-list-item-tumblr pb-hidden" data-type="{feed.raw.type}" data-url="{feed.link}">
-                    <f:if condition="{feed.image}">
-                        <f:then>
-                            <div class="image" style="background-image: url({feed.image})"></div>
-                        </f:then>
-                        <f:else>
-                            <div class="image" style="background-image: url(/typo3conf/ext/pb_social/Resources/Public/Icons/tumblr_big.png);background-repeat:no-repeat;background-size: 230px;background-color:white;"></div>
-                        </f:else>
-                    </f:if>
-                    <div class="icon"></div>
-                    <f:if condition="{feed.text}">
-                        <span class="text">{feed.text}</span>
-                    </f:if>
-                    <a class="additional-info info-2" href="{feed.link}">{feed.raw.note_count}</a>
-                </div>
-            </f:if>
-
-            <f:if condition="{0:feed.provider}=={0:'twitter'}">
-                <div class="pb-list-item pb-list-item-twitter pb-hidden" data-type="" data-id="{feed.id}" data-url="{feed.link}">
-                    <f:if condition="{feed.image}">
-                        <f:then>
-                            <div class="image" data-image-id="{feed.raw.object_id}" style="background-image: url({feed.image})"></div>
-                        </f:then>
-                        <f:else>
-                            <div class="image" data-image-id="{feed.raw.object_id}" style="background-image: url(/typo3conf/ext/pb_social/Resources/Public/Icons/twitter_big.png);background-repeat:no-repeat;background-size: 180px;background-color:white;"></div>
-                        </f:else>
-                    </f:if>
-                    <f:if condition="{feed.text}">
-                        <span class="text">{feed.text}</span>
-                    </f:if>
-                    <div class="icon"></div>
-                    <a class="additional-info info-1" href="{feed.link}">
-                        <f:count>{feed.raw.retweet_count}</f:count>
-                    </a>
-                    <a class="additional-info info-2" href="{feed.link}">
-                        <f:count>{feed.raw.favorite_count}</f:count>
-                    </a>
-                </div>
-            </f:if>
-
-        </f:for>
     </div>
 </f:section>

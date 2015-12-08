@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for the BeSocial extension in the FRONTEND</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_pbbesocial_domain_model_item">Item</label>
+            <label index="tx_pbbesocial_domain_model_item.type">type</label>
+			<label index="tx_pbbesocial_domain_model_item.url">url</label>
+			<label index="tx_pbbesocial_domain_model_item.date">date</label>
+			<label index="tx_pbbesocial_domain_model_item.result">result</label>
+		</languageKey>
+	</data>
+</T3locallang>

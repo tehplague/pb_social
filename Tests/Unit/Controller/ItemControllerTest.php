@@ -1,5 +1,5 @@
 <?php
-namespace PlusB\PbSocial\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,92 +25,37 @@ namespace PlusB\PbSocial\Tests\Unit\Controller;
  ***************************************************************/
 
 /**
- * Test case for class PlusB\PbSocial\Controller\ItemController.
+ * Test case for class Tx_Pb_besocial_Controller_ItemController.
+ *
+ * @version $Id$
+ * @copyright Copyright belongs to the respective authors
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ *
+ * @package TYPO3
+ * @subpackage BeSocial
  *
  * @author Mikolaj Jedrzejewski <mj@plusb.de>
  */
-class ItemControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-
+class Tx_Pb_besocial_Controller_ItemControllerTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
 	/**
-	 * @var \PlusB\PbSocial\Controller\ItemController
+	 * @var Tx_PbBesocial_Domain_Model_Item
 	 */
-	protected $subject = NULL;
+	protected $fixture;
 
-	protected function setUp() {
-		$this->subject = $this->getMock('PlusB\\PbSocial\\Controller\\ItemController', array('redirect', 'forward', 'addFlashMessage'), array(), '', FALSE);
+	public function setUp() {
+		$this->fixture = new Tx_PbBesocial_Domain_Model_Item();
 	}
 
-	protected function tearDown() {
-		unset($this->subject);
-	}
-
-	/**
-	 * @test
-	 */
-	public function listActionFetchesAllItemsFromRepositoryAndAssignsThemToView() {
-
-		$allItems = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
-
-		$itemRepository = $this->getMock('PlusB\\PbSocial\\Domain\\Repository\\ItemRepository', array('findAll'), array(), '', FALSE);
-		$itemRepository->expects($this->once())->method('findAll')->will($this->returnValue($allItems));
-		$this->inject($this->subject, 'itemRepository', $itemRepository);
-
-		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$view->expects($this->once())->method('assign')->with('items', $allItems);
-		$this->inject($this->subject, 'view', $view);
-
-		$this->subject->listAction();
+	public function tearDown() {
+		unset($this->fixture);
 	}
 
 	/**
 	 * @test
 	 */
-	public function showActionAssignsTheGivenItemToView() {
-		$item = new \PlusB\PbSocial\Domain\Model\Item();
-
-		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$this->inject($this->subject, 'view', $view);
-		$view->expects($this->once())->method('assign')->with('item', $item);
-
-		$this->subject->showAction($item);
+	public function dummyMethod() {
+		$this->markTestIncomplete();
 	}
 
-	/**
-	 * @test
-	 */
-	public function editActionAssignsTheGivenItemToView() {
-		$item = new \PlusB\PbSocial\Domain\Model\Item();
-
-		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$this->inject($this->subject, 'view', $view);
-		$view->expects($this->once())->method('assign')->with('item', $item);
-
-		$this->subject->editAction($item);
-	}
-
-	/**
-	 * @test
-	 */
-	public function updateActionUpdatesTheGivenItemInItemRepository() {
-		$item = new \PlusB\PbSocial\Domain\Model\Item();
-
-		$itemRepository = $this->getMock('PlusB\\PbSocial\\Domain\\Repository\\ItemRepository', array('update'), array(), '', FALSE);
-		$itemRepository->expects($this->once())->method('update')->with($item);
-		$this->inject($this->subject, 'itemRepository', $itemRepository);
-
-		$this->subject->updateAction($item);
-	}
-
-	/**
-	 * @test
-	 */
-	public function deleteActionRemovesTheGivenItemFromItemRepository() {
-		$item = new \PlusB\PbSocial\Domain\Model\Item();
-
-		$itemRepository = $this->getMock('PlusB\\PbSocial\\Domain\\Repository\\ItemRepository', array('remove'), array(), '', FALSE);
-		$itemRepository->expects($this->once())->method('remove')->with($item);
-		$this->inject($this->subject, 'itemRepository', $itemRepository);
-
-		$this->subject->deleteAction($item);
-	}
 }
+?>

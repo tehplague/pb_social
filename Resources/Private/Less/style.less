@@ -1,0 +1,220 @@
+.social-list{
+  position: relative;
+  width: 100%;
+  margin-top: 9px;
+
+  .col-left{
+    float: left;
+    width: 253px;
+    margin-right: 8px;
+  }
+  .col-right{
+    float: left;
+    width: 253px;
+  }
+
+  .hidden{
+    display: none;
+  }
+
+  .video-overlay{
+    position: absolute;
+    bottom: 95px;
+    left: 95px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.90;
+    cursor: pointer;
+  }
+}
+
+.social-list-item-facebook, .social-list-item-googleplus, .social-list-item-instagram{
+  position: relative;
+  box-sizing: border-box;
+  float: left;
+  width: 253px;
+  height: 355px;
+  margin-top: 8px;
+  background-color: #3c569a;
+  &:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border: 8px solid transparent;
+    top: 237px;
+    left: 50%;
+    margin: 0 0 0 -8px;
+  }
+
+  .image{
+    position: absolute;
+    height: 253px;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    cursor: pointer;
+  }
+  .icon{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 17px;
+    cursor: pointer;
+  }
+  .text{
+    position: absolute;
+    color: #ffffff;
+    width: 170px;
+    height: 49px;
+    right: 20px;
+    bottom: 36px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 16px;
+    cursor: pointer;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}
+
+.social-list-item-facebook {
+  height: 355px;
+  background-color: #3c569a;
+  &:after {
+    border-bottom-color: #3c569a;
+  }
+  .image{
+    top: 0;
+  }
+  .icon{
+    top: 270px;
+  }
+  .text{
+    width: 170px;
+    height: 49px;
+    bottom: 36px;
+  }
+  .likes,.comments{
+    position: absolute;
+    color: #ffffff;
+    width: 42px;
+    height: 17px;
+    bottom: 10px;
+    background-repeat: no-repeat;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 3px 0 0 21px;
+  }
+  .likes{
+    right: 80px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/fb_like.png");
+    background-size: 14px 18px;
+    background-position: 0px -1px;
+  }
+  .comments{
+    right: 20px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/fb_comments.png");
+    background-size: 16px 18px;
+    background-position: 0px -1px;
+  }
+  &[data-type="video"]{
+    .image{
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: black;
+    }
+    .video-overlay{
+      top: 95px;
+      bottom: auto;
+    }
+  }
+}
+
+.social-list-item-googleplus {
+  height: 367px;
+  background-color: #de4c35;
+  &:after {
+    border-top-color: #de4c35;
+    top: 114px;
+  }
+  .image{
+    bottom: 0;
+  }
+  .icon{
+    top: 17px;
+  }
+  .text{
+    width: 170px;
+    height: 63px;
+    top: 18px;
+  }
+  .plus,.replies{
+    position: absolute;
+    color: #ffffff;
+    width: 42px;
+    height: 15px;
+    top: 90px;
+    background-repeat: no-repeat;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 1px 0 0 21px;
+  }
+  .plus{
+    right: 80px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/google_plus.png");
+    background-size: 12px 15px;
+    background-position: 0px -1px;
+  }
+  .replies{
+    right: 20px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/google_share.png");
+    background-size: 16px 15px;
+    background-position: 0px 0px;
+  }
+}
+
+
+.social-list-item-instagram {
+  height: 318px;
+  background-color: #c8c83c;
+  &:after {
+    border-bottom-color: #c8c83c;
+  }
+  .image{
+    top: 0;
+  }
+  .icon{
+    top: 270px;
+  }
+  .likes,.comments{
+    position: absolute;
+    color: #ffffff;
+    width: 42px;
+    height: 17px;
+    bottom: 22px;
+    background-repeat: no-repeat;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 2px 0 0 21px;
+  }
+  .likes{
+    right: 80px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/instagram_like.png");
+    background-size: 18px 15px;
+    background-position: 0px 1px;
+  }
+  .comments{
+    right: 20px;
+    background-image: url("/typo3conf/ext/pb_besocial/Resources/Public/Icons/instagram_comments.png");
+    background-size: 16px 15px;
+    background-position: 0px 1px;
+  }
+}

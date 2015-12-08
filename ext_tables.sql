@@ -1,15 +1,15 @@
 #
-# Table structure for table 'tx_pbsocial_domain_model_item'
+# Table structure for table 'tx_pbbesocial_domain_model_item'
 #
-CREATE TABLE tx_pbsocial_domain_model_item (
+CREATE TABLE tx_pbbesocial_domain_model_item (
 
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 
-	type varchar(255) DEFAULT '' NOT NULL,
-	cache_identifier varchar(255) DEFAULT '' NOT NULL,
+  type varchar(25) DEFAULT '' NOT NULL,
+	url varchar(255) DEFAULT '' NOT NULL,
 	date int(11) DEFAULT '0' NOT NULL,
-	result mediumtext NOT NULL,
+	result text NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -29,6 +29,7 @@ CREATE TABLE tx_pbsocial_domain_model_item (
 	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3ver_move_id int(11) DEFAULT '0' NOT NULL,
 
+	t3_origuid int(11) DEFAULT '0' NOT NULL,
 	sys_language_uid int(11) DEFAULT '0' NOT NULL,
 	l10n_parent int(11) DEFAULT '0' NOT NULL,
 	l10n_diffsource mediumblob,
@@ -36,6 +37,6 @@ CREATE TABLE tx_pbsocial_domain_model_item (
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY t3ver_oid (t3ver_oid,t3ver_wsid),
- KEY language (l10n_parent,sys_language_uid)
+	KEY language (l10n_parent,sys_language_uid)
 
 );

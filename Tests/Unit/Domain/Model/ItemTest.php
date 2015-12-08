@@ -1,12 +1,10 @@
 <?php
 
-namespace PlusB\PbSocial\Tests\Unit\Domain\Model;
-
 /***************************************************************
  *  Copyright notice
  *
  *  (c) 2014 Mikolaj Jedrzejewski <mj@plusb.de>, plusB
- *
+ *  			
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,117 +25,86 @@ namespace PlusB\PbSocial\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 /**
- * Test case for class \PlusB\PbSocial\Domain\Model\Item.
+ * Test case for class Tx_PbBesocial_Domain_Model_Item.
  *
+ * @version $Id$
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
+ * @package TYPO3
+ * @subpackage BeSocial
+ *
  * @author Mikolaj Jedrzejewski <mj@plusb.de>
  */
-class ItemTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class Tx_PbBesocial_Domain_Model_ItemTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
 	/**
-	 * @var \PlusB\PbSocial\Domain\Model\Item
+	 * @var Tx_PbBesocial_Domain_Model_Item
 	 */
-	protected $subject = NULL;
+	protected $fixture;
 
-	protected function setUp() {
-		$this->subject = new \PlusB\PbSocial\Domain\Model\Item();
+	public function setUp() {
+		$this->fixture = new Tx_PbBesocial_Domain_Model_Item();
 	}
 
-	protected function tearDown() {
-		unset($this->subject);
+	public function tearDown() {
+		unset($this->fixture);
 	}
 
 	/**
 	 * @test
 	 */
-	public function getTypeReturnsInitialValueForString() {
+	public function getUrlReturnsInitialValueForString() { }
+
+	/**
+	 * @test
+	 */
+	public function setUrlForStringSetsUrl() { 
+		$this->fixture->setUrl('Conceived at T3CON10');
+
 		$this->assertSame(
-			'',
-			$this->subject->getType()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setTypeForStringSetsType() {
-		$this->subject->setType('Conceived at T3CON10');
-
-		$this->assertAttributeEquals(
 			'Conceived at T3CON10',
-			'type',
-			$this->subject
+			$this->fixture->getUrl()
 		);
 	}
-
+	
 	/**
 	 * @test
 	 */
-	public function getCacheIdentifierReturnsInitialValueForString() {
+	public function getDateReturnsInitialValueForInteger() { 
 		$this->assertSame(
-			'',
-			$this->subject->getCacheIdentifier()
+			0,
+			$this->fixture->getDate()
 		);
 	}
 
 	/**
 	 * @test
 	 */
-	public function setCacheIdentifierForStringSetsCacheIdentifier() {
-		$this->subject->setCacheIdentifier('Conceived at T3CON10');
+	public function setDateForIntegerSetsDate() { 
+		$this->fixture->setDate(12);
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'cacheidentifier',
-			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getDateReturnsInitialValueForDateTime() {
-		$this->assertEquals(
-			NULL,
-			$this->subject->getDate()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setDateForDateTimeSetsDate() {
-		$dateTimeFixture = new \DateTime();
-		$this->subject->setDate($dateTimeFixture);
-
-		$this->assertAttributeEquals(
-			$dateTimeFixture,
-			'date',
-			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getResultReturnsInitialValueForString() {
 		$this->assertSame(
-			'',
-			$this->subject->getResult()
+			12,
+			$this->fixture->getDate()
 		);
 	}
+	
+	/**
+	 * @test
+	 */
+	public function getResultReturnsInitialValueForString() { }
 
 	/**
 	 * @test
 	 */
-	public function setResultForStringSetsResult() {
-		$this->subject->setResult('Conceived at T3CON10');
+	public function setResultForStringSetsResult() { 
+		$this->fixture->setResult('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
+		$this->assertSame(
 			'Conceived at T3CON10',
-			'result',
-			$this->subject
+			$this->fixture->getResult()
 		);
 	}
+	
 }
+?>

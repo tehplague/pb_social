@@ -1,23 +1,61 @@
-
-plugin.tx_pbsocial {
+plugin.tx_pbbesocial {
 	view {
-		templateRootPath = {$plugin.tx_pbsocial.view.templateRootPath}
-		partialRootPath = {$plugin.tx_pbsocial.view.partialRootPath}
-		layoutRootPath = {$plugin.tx_pbsocial.view.layoutRootPath}
+		templateRootPath = {$plugin.tx_pbbesocial.view.templateRootPath}
+		partialRootPath = {$plugin.tx_pbbesocial.view.partialRootPath}
+		layoutRootPath = {$plugin.tx_pbbesocial.view.layoutRootPath}
 	}
 	persistence {
-		storagePid = {$plugin.tx_pbsocial.persistence.storagePid}
+		storagePid = {$plugin.tx_pbbesocial.persistence.storagePid}
 	}
 	features {
 		# uncomment the following line to enable the new Property Mapper.
 		# rewrittenPropertyMapper = 1
 	}
+	settings {
+        jQuery = {$plugin.tx_pbbesocial.settings.jquery}
+
+        facebook = {$plugin.tx_pbbesocial.settings.facebook}
+        facebookurl = {$plugin.tx_pbbesocial.settings.facebookurl}
+        facebookshareurl = {$plugin.tx_pbbesocial.settings.facebookshareurl}
+        facebooktooltip = {$plugin.tx_pbbesocial.settings.facebooktooltip}
+
+        googleplus = {$plugin.tx_pbbesocial.settings.googleplus}
+        googleplusurl = {$plugin.tx_pbbesocial.settings.googleplusurl}
+        googleplusshareurl = {$plugin.tx_pbbesocial.settings.googleplusshareurl}
+        googleplustooltip = {$plugin.tx_pbbesocial.settings.googleplustooltip}
+
+        twitter = {$plugin.tx_pbbesocial.settings.twitter}
+        twitterurl = {$plugin.tx_pbbesocial.settings.twitterurl}
+        twittershareurl = {$plugin.tx_pbbesocial.settings.twittershareurl}
+        twittertooltip = {$plugin.tx_pbbesocial.settings.twittertooltip}
+
+        pinterest = {$plugin.tx_pbbesocial.settings.pinterest}
+        pinteresturl = {$plugin.tx_pbbesocial.settings.pinteresturl}
+        pinterestshareurl = {$plugin.tx_pbbesocial.settings.pinterestshareurl}
+        pinteresttooltip = {$plugin.tx_pbbesocial.settings.pinteresttooltip}
+
+        mailto = {$plugin.tx_pbbesocial.settings.mailto}
+        mailtourl = {$plugin.tx_pbbesocial.settings.mailtourl}
+
+
+        //
+        // SOCIAL FEED
+        //
+
+        sf_facebook = {$plugin.tx_pbbesocial.settings.sf_facebook}
+        sf_googleplus = {$plugin.tx_pbbesocial.settings.sf_googleplus}
+        sf_twitter = {$plugin.tx_pbbesocial.settings.sf_twitter}
+        sf_instagram = {$plugin.tx_pbbesocial.settings.sf_instagram}
+    }
 }
 
-[globalVar = LIT:1 = {$plugin.tx_pbsocial.settings.load-jquery}]
-    #page.includeJS.pbjquery = EXT:pb_social/Resources/Public/Js/jquery-2.1.1.min.js
-[END]
-
-
-page.includeCSS.pbsocialcss = EXT:pb_social/Resources/Public/Css/style.css
-page.includeJSFooter.pbsocialjs = EXT:pb_social/Resources/Public/Js/main.js
+page.includeJSFooter {
+# TODO => condition not working
+#    [globalVar = LIT:1 = {$plugin.tx_pbbesocial.settings.jQuery}]
+#        pbBeSocialjQuery = /typo3conf/ext/pb_besocial/Resources/Public/Js/pb_bs_jQuery.js
+#    [global]
+    pbBeSocialMain = /typo3conf/ext/pb_besocial/Resources/Public/Javascript/main.js
+}
+page.includeCSS{
+    pbBeSocialStyle = /typo3conf/ext/pb_besocial/Resources/Public/Css/style.css
+}

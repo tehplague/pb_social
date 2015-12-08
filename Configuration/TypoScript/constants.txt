@@ -1,15 +1,77 @@
+# customsubcategory=1facebook=Facebook-Configuration
+# customsubcategory=2googleplus=GooglePlus-Configuration
+# customsubcategory=3twitter=Twitter-Configuration
+# customsubcategory=4pinterest=Pinterest-Configuration
+# customsubcategory=5mailto=EMail-Configuration
+# customsubcategory=0modules=Enable Modules
 
-plugin.tx_pbsocial {
+plugin.tx_pbbesocial {
 	view {
-		# cat=plugin.tx_pbsocial/file; type=string; label=Path to template root (FE)
-		templateRootPath = EXT:pb_social/Resources/Private/Templates/
-		# cat=plugin.tx_pbsocial/file; type=string; label=Path to template partials (FE)
-		partialRootPath = EXT:pb_social/Resources/Private/Partials/
-		# cat=plugin.tx_pbsocial/file; type=string; label=Path to template layouts (FE)
-		layoutRootPath = EXT:pb_social/Resources/Private/Layouts/
+		# cat=BeSocial_General/file; type=string; label=Path to template root (FE)
+		templateRootPath = EXT:pb_besocial/Resources/Private/Templates/
+		# cat=BeSocial_General/file; type=string; label=Path to template partials (FE)
+		partialRootPath = EXT:pb_besocial/Resources/Private/Partials/
+		# cat=BeSocial_General/file; type=string; label=Path to template layouts (FE)
+		layoutRootPath = EXT:pb_besocial/Resources/Private/Layouts/
 	}
 	persistence {
-		# cat=plugin.tx_pbsocial//a; type=string; label=Default storage PID
+		# cat=BeSocial_General//a; type=string; label=Default storage PID
 		storagePid =
 	}
+	settings {
+        # cat=BeSocial_General/0modules/0010; type=boolean; label= include jQuery
+        jquery = 1
+
+        # cat=BeSocial_SocialBar/0modules/0020; type=boolean; label=Facebook
+        facebook = 0
+        # cat=BeSocial_SocialBar/0modules/0030; type=boolean; label=GooglePlus
+        googleplus = 0
+        # cat=BeSocial_SocialBar/0modules/0040; type=boolean; label=Twitter
+        twitter = 0
+        # cat=BeSocial_SocialBar/0modules/0050; type=boolean; label=Pinterest
+        pinterest = 0
+        # cat=BeSocial_SocialBar/0modules/0060; type=boolean; label=mailto
+        mailto = 0
+
+        # cat=BeSocial_SocialBar/1facebook/0010; type=string; label=Facebook-Url
+        facebookurl = https://www.facebook.com/
+        # cat=BeSocial_SocialBar/1facebook/0020; type=string; label=Facebook-Share-Url
+        facebookshareurl = https://www.facebook.com/sharer/sharer.php?u=##URL##
+        # cat=BeSocial_SocialBar/1facebook/0030; type=string; label=Facebook-ToolTip
+        facebooktooltip = share on Facebook
+
+        # cat=BeSocial_SocialBar/2googleplus/0010; type=string; label=GooglePlus-Url
+        googleplusurl = https://www.google.com/
+        # cat=BeSocial_SocialBar/2googleplus/0020; type=string; label=GooglePlus-Share-Url
+        googleplusshareurl = https://plus.google.com/share?url=##URL##
+        # cat=BeSocial_SocialBar/2googleplus/0030; type=string; label=GooglePlus-ToolTip
+        googleplustooltip = share on GooglePlus
+
+        # cat=BeSocial_SocialBar/3twitter/0010; type=string; label=Twitter-Url
+        twitterurl = http://twitter.com/
+        # cat=BeSocial_SocialBar/3twitter/0020; type=string; label=Twitter-Share-Url
+        twittershareurl = http://twitter.com/share?text=TITLE&url=##URL##
+        # cat=BeSocial_SocialBar/3twitter/0030; type=string; label=Twitter-ToolTip
+        twittertooltip = share on Twitter
+
+        # cat=BeSocial_SocialBar/4pinterest/0010; type=string; label=Pinterest-Url
+        pinteresturl = https://de.pinterest.com/
+        # cat=BeSocial_SocialBar/4pinterest/0020; type=string; label=Pinterest-Share-Url
+        pinterestshareurl = http://pinterest.com/pin/create/button/?url=##URL##&description=DESCRIPTION
+        # cat=BeSocial_SocialBar/4pinterest/0030; type=string; label=Pinterest-ToolTip
+        pinteresttooltip = share on Pinterest
+
+        # cat=BeSocial_SocialBar/5mailto/0010; type=string; label=MailTo-Url
+        mailtourl = mailto:?subject=SUBJECT&body=##URL##
+
+
+        # cat=BeSocial_SocialFeed/0modules/0020; type=boolean; label=Facebook
+        sf_facebook = 0
+        # cat=BeSocial_SocialFeed/0modules/0030; type=boolean; label=GooglePlus
+        sf_googleplus = 0
+        # cat=BeSocial_SocialFeed/0modules/0040; type=boolean; label=Twitter
+        sf_twitter = 0
+        # cat=BeSocial_SocialFeed/0modules/0050; type=boolean; label=Instagram
+        sf_instagram = 0
+    }
 }

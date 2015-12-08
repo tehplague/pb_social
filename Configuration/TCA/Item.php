@@ -3,43 +3,42 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
-	'ctrl' => $GLOBALS['TCA']['tx_pbsocial_domain_model_item']['ctrl'],
+$TCA['tx_pbbesocial_domain_model_item'] = array(
+	'ctrl' => $TCA['tx_pbbesocial_domain_model_item']['ctrl'],
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, cacheidentifier, date, result',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, url, date, result',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, type, cacheidentifier, date, result, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, type, url, date, result,--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
 	),
 	'columns' => array(
-	
 		'sys_language_uid' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
 			'config' => array(
 				'type' => 'select',
 				'foreign_table' => 'sys_language',
 				'foreign_table_where' => 'ORDER BY sys_language.title',
 				'items' => array(
-					array('LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages', -1),
-					array('LLL:EXT:lang/locallang_general.xlf:LGL.default_value', 0)
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
 				),
 			),
 		),
 		'l10n_parent' => array(
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
 			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
 			'config' => array(
 				'type' => 'select',
 				'items' => array(
 					array('', 0),
 				),
-				'foreign_table' => 'tx_pbsocial_domain_model_item',
-				'foreign_table_where' => 'AND tx_pbsocial_domain_model_item.pid=###CURRENT_PID### AND tx_pbsocial_domain_model_item.sys_language_uid IN (-1,0)',
+				'foreign_table' => 'tx_pbbesocial_domain_model_item',
+				'foreign_table_where' => 'AND tx_pbbesocial_domain_model_item.pid=###CURRENT_PID### AND tx_pbbesocial_domain_model_item.sys_language_uid IN (-1,0)',
 			),
 		),
 		'l10n_diffsource' => array(
@@ -47,19 +46,17 @@ $GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
 				'type' => 'passthrough',
 			),
 		),
-
 		't3ver_label' => array(
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.versionLabel',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
 				'max' => 255,
 			)
 		),
-	
 		'hidden' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
 			'config' => array(
 				'type' => 'check',
 			),
@@ -67,7 +64,7 @@ $GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
 		'starttime' => array(
 			'exclude' => 1,
 			'l10n_mode' => 'mergeIfNotBlank',
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
 			'config' => array(
 				'type' => 'input',
 				'size' => 13,
@@ -83,7 +80,7 @@ $GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
 		'endtime' => array(
 			'exclude' => 1,
 			'l10n_mode' => 'mergeIfNotBlank',
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.endtime',
 			'config' => array(
 				'type' => 'input',
 				'size' => 13,
@@ -96,19 +93,18 @@ $GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
 				),
 			),
 		),
-
-		'type' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pb_social/Resources/Private/Language/locallang_db.xlf:tx_pbsocial_domain_model_item.type',
-			'config' => array(
-				'type' => 'input',
-				'size' => 30,
-				'eval' => 'trim'
-			),
-		),
-		'cache_identifier' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pb_social/Resources/Private/Language/locallang_db.xlf:tx_pbsocial_domain_model_item.cache_identifier',
+        'type' => array(
+            'exclude' => 0,
+            'label' => 'type',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ),
+        ),
+		'url' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:pb_besocial/Resources/Private/Language/locallang_db.xml:tx_pbbesocial_domain_model_item.url',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
@@ -116,26 +112,25 @@ $GLOBALS['TCA']['tx_pbsocial_domain_model_item'] = array(
 			),
 		),
 		'date' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pb_social/Resources/Private/Language/locallang_db.xlf:tx_pbsocial_domain_model_item.date',
+			'exclude' => 0,
+			'label' => 'LLL:EXT:pb_besocial/Resources/Private/Language/locallang_db.xml:tx_pbbesocial_domain_model_item.date',
 			'config' => array(
 				'type' => 'input',
-				'size' => 10,
-				'eval' => 'datetime',
-				'checkbox' => 1,
-				'default' => time()
+				'size' => 4,
+				'eval' => 'int'
 			),
 		),
 		'result' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pb_social/Resources/Private/Language/locallang_db.xlf:tx_pbsocial_domain_model_item.result',
+			'exclude' => 0,
+			'label' => 'LLL:EXT:pb_besocial/Resources/Private/Language/locallang_db.xml:tx_pbbesocial_domain_model_item.result',
 			'config' => array(
 				'type' => 'text',
 				'cols' => 40,
 				'rows' => 15,
 				'eval' => 'trim'
-			)
+			),
 		),
-		
 	),
 );
+
+?>
